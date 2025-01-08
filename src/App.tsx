@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./App.css";
 
 function App() {
+  const [hexagon, setHexagon] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:5000/api/hexagon")
+      .then((response) => {
+        setHexagon(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching othe hexagon data", error);
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <header>HexMath Game</header>
+      {hexagon ? (
+        <>
+          <div>
+            <h2>Target: {hexagon.target} </h2>
+            <h3>Numbers: {hexagon.numbers.join(", ")} </h3>
+          </div>
+        </>
+      ) : (
+        <p>Loading puzzle...</p>
+      )}
     </div>
   );
 }
